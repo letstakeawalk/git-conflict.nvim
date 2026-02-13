@@ -686,20 +686,13 @@ end
 ---@param visited_buf ConflictBufferCache
 local function quickfix_items_from_positions(item, items, visited_buf)
   if vim.tbl_isempty(visited_buf.positions) then return end
-  for _, pos in ipairs(visited_buf.positions) do
-    for key, value in pairs(pos) do
-      if
-          vim.tbl_contains({ name_map.ours, name_map.theirs, name_map.base }, key)
-          and not vim.tbl_isempty(value)
-      then
-        local lnum = value.range_start + 1
-        local next_item = vim.deepcopy(item)
-        next_item.text = fmt('%s change', key, lnum)
-        next_item.lnum = lnum
-        next_item.col = 0
-        table.insert(items, next_item)
-      end
-    end
+  for i, pos in ipairs(visited_buf.positions) do
+    local lnum = pos.current.range_start + 1
+    local next_item = vim.deepcopy(item)
+    next_item.text = fmt('conflict %d', i)
+    next_item.lnum = lnum
+    next_item.col = 0
+    table.insert(items, next_item)
   end
 end
 
