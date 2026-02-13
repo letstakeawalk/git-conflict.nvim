@@ -253,8 +253,7 @@ end
 ---them when a buffer changes since otherwise we have to reparse the whole buffer constantly
 ---@param positions table
 ---@param lines string[]
-local function highlight_conflicts(positions, lines)
-  local bufnr = api.nvim_get_current_buf()
+local function highlight_conflicts(bufnr, positions, lines)
   M.clear(bufnr)
 
   for _, position in ipairs(positions) do
@@ -404,7 +403,7 @@ local function parse_buffer(bufnr, range_start, range_end)
 
   update_visited_buffers(bufnr, positions)
   if has_conflict then
-    highlight_conflicts(positions, lines)
+    highlight_conflicts(bufnr, positions, lines)
   else
     M.clear(bufnr)
   end
